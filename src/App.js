@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import BoxColor from "./components/BoxColor";
 import Pagination from "./components/Pagination";
 import ProductList from "./components/ProductList";
 import ToDoForm from "./components/ToDoForm";
 import ToDoList from "./components/ToDoList";
+import SearchForm from "./components/SearchForm";
 import queryString from "query-string";
 
 const faker = require("faker");
@@ -84,7 +85,7 @@ function App() {
         setTodos(newTodo);
     }
 
-    // Event of productList
+    // Event of ProductList
     function handlePageChange(newPage) {
         console.log(newPage);
         setFilters({
@@ -92,12 +93,23 @@ function App() {
             _page: newPage,
         });
     }
+
+    // Event of SearchForm
+    function handleSearchChange({ searchString }) {
+        setFilters({
+            ...filters,
+            _page: 1,
+            name_like: searchString,
+        });
+    }
+
     return (
         <div className="App" style={{ textAlign: "center" }}>
             <h1>Hello ReactJS</h1>
             <BoxColor color={color} onBoxClick={handleBoxClick} />
             <ToDoForm onSubmit={handleToDoFormSubmit} />
             <ToDoList todos={todos} onToDoClick={handleToDoClick} />
+            <SearchForm onSearchChange={handleSearchChange} />
             <ProductList productList={productList} />
             <Pagination
                 pagination={pagination}
