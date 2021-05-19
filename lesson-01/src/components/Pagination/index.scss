@@ -1,0 +1,28 @@
+.pagination-btn {
+    padding: 20px;
+    border: none;
+    outline: none;
+    background-color: #333;
+    border-radius: 10px;
+    cursor: pointer;
+    &:hover {
+        background-color: rgb(100, 100, 100);
+    }
+    &:first-child {
+        margin-right: 10px;
+    }
+    i {
+        color: aliceblue;
+    }
+}
+
+button[disabled="disabled"],
+button:disabled {
+    // your css rules
+
+    pointer-events: none;
+    background-color: rgb(190, 190, 190);
+    i {
+        color: rgb(224, 224, 224);
+    }
+}

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import BoxColor from "./components/BoxColor";
+import Pagination from "./components/Pagination";
+import ProductList from "./components/ProductList";
 import ToDoForm from "./components/ToDoForm";
 import ToDoList from "./components/ToDoList";
+import queryString from "query-string";
 
 const faker = require("faker");
 
@@ -26,6 +29,31 @@ function App() {
             },
         ];
     });
+
+    // State of ProductList
+    const [productList, setProductList] = useState([]);
+
+    // State of Pagination
+    const [pagination, setPagination] = useState({});
+
+    // State of filters
+    const [filters, setFilters] = useState({
+        _limit: 10,
+        _page: 1,
+    });
+    // Event of productList
+    useEffect(() => {
+        async function getProductList() {
+            const queryParams = queryString.stringify(filters);
+            const productURL = `http://js-mock-api.herokuapp.com/api/products?${queryParams}`;
+            const productRaw = await fetch(productURL);
+            const productJSON = await productRaw.json();
+            const { data, pagination } = productJSON;
+            setProductList(data);
+            setPagination(pagination);
+        }
+        getProductList();
+    }, [filters]);
 
     // Event of Box Color
     function handleBoxClick() {
@@ -56,12 +84,25 @@ function App() {
         setTodos(newTodo);
     }
 
+    // Event of productList
+    function handlePageChange(newPage) {
+        console.log(newPage);
+        setFilters({
+            ...filters,
+            _page: newPage,
+        });
+    }
     return (
-        <div className="App">
+        <div className="App" style={{ textAlign: "center" }}>
             <h1>Hello ReactJS</h1>
             <BoxColor color={color} onBoxClick={handleBoxClick} />
             <ToDoForm onSubmit={handleToDoFormSubmit} />
             <ToDoList todos={todos} onToDoClick={handleToDoClick} />
+            <ProductList productList={productList} />
+            <Pagination
+                pagination={pagination}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
 }
